@@ -1,0 +1,92 @@
+/* ==========================================================================
+   Airport Bansko Transfer — design tokens
+   Palette: dawn-departure / alpine-dusk, tuned for a private mountain
+   transfer service. Amber = sunrise departures, Alpine Navy = the Pirin
+   range at dusk, Glacier Blue = the route between the two.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-alpine-night: #0e2338;
+  --color-alpine-night-soft: #14314d;
+  --color-glacier: #2e6e9e;
+  --color-glacier-light: #6fa8d1;
+  --color-amber: #e8a33d;
+  --color-amber-dark: #c8811f;
+  --color-pine: #3c5a45;
+  --color-snow: #f7f9fb;
+  --color-snow-dim: #eef2f6;
+  --color-ink: #16202b;
+  --color-ink-soft: #4a5a68;
+  --color-line: #dde5ec;
+
+  --font-display: 'Sora', 'Segoe UI', sans-serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+
+  --radius-md: 10px;
+  --radius-lg: 18px;
+  --shadow-soft: 0 6px 24px rgba(14, 35, 56, 0.08);
+  --shadow-card: 0 10px 30px rgba(14, 35, 56, 0.10);
+}
+
+html, body {
+  background: var(--color-snow);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4, .text-h1, .text-h2, .text-h3, .text-h4, .text-h5 {
+  font-family: var(--font-display) !important;
+  letter-spacing: -0.01em;
+  color: var(--color-alpine-night);
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-amber-dark);
+}
+
+/* Respect reduced-motion preference site-wide */
+@media (prefers-reduced-motion: reduce) {
+  html, body { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Visible keyboard focus ring everywhere, incl. inside Vuetify controls */
+a:focus-visible,
+button:focus-visible,
+.v-btn:focus-visible,
+.v-field:focus-within {
+  outline: 3px solid var(--color-amber) !important;
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------------
+   Ridgeline divider — the site's signature motif. A thin path silhouette
+   of the Pirin range, reused between every major section instead of a
+   generic wave/blob so the "airport -> mountains" idea repeats visually.
+   ------------------------------------------------------------------------ */
+.ridge-divider {
+  display: block;
+  width: 100%;
+  height: 56px;
+  line-height: 0;
+}
+.ridge-divider--light path { fill: var(--color-snow); }
+.ridge-divider--night path { fill: var(--color-alpine-night); }
+.ridge-divider--dim path { fill: var(--color-snow-dim); }
+
+.container-narrow {
+  max-width: 1180px;
+  margin: 0 auto;
+}

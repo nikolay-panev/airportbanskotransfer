@@ -1,0 +1,1 @@
+import{H as e,K as t,m as n,q as r,rt as i,t as a,x as o}from"./DBY1nKMw.js";var s={};function c(a,s){let c=r(`v-container`),l=r(`v-main`),u=r(`v-app`);return e(),n(u,null,{default:i(()=>[o(l,null,{default:i(()=>[o(c,{fluid:``,class:`pa-0 rounded-0 fill-height`},{default:i(()=>[t(a.$slots,`default`)]),_:3})]),_:3})]),_:3})}var l=a(s,[[`render`,c]]);export{l as default};

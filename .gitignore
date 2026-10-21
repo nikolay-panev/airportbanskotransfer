@@ -1,0 +1,14 @@
+# User-specific files
+*.env
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+node_modules
+airportbanskotransfer.zip
+
+# config file
+api/config.php

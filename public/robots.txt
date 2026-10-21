@@ -1,0 +1,28 @@
+# airportbanskotransfer.com
+User-agent: *
+Allow: /
+
+# Known AI answer-engine / LLM crawlers — explicitly allowed so the site can
+# be cited by AI assistants (ChatGPT, Claude, Perplexity, etc.)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://airportbanskotransfer.com/sitemap.xml
