@@ -1,19 +1,37 @@
 # Airport Bansko Transfer
 
-> Private, fixed-price airport transfer service between Sofia, Plovdiv (Bulgaria), Thessaloniki and Kavala (Greece) airports and the Bansko area (Bansko, Dobrinishte, Pirin Golf, Razlog) in Bulgaria's Pirin mountains.
+> Private, fixed-price airport transfer service between Sofia and Plovdiv airports (Bulgaria), Thessaloniki and Kavala airports (Greece) and the Bansko area (Bansko, Razlog, Dobrinishte, Pirin Golf) in Bulgaria's Pirin mountains. Based in Bansko. No prepayment, free cancellation, pay the driver on arrival.
 
-Airport Bansko Transfer runs private, door-to-door car transfers — not shared shuttles. Prices are fixed and quoted instantly online before any personal details are collected. No prepayment is required: customers pay the driver on arrival in EUR, USD or GBP, cash or Revolut. Cancellation is free at any time. Drivers track incoming flights and wait at arrivals (meet & greet), including during delays. Vehicles carry up to 8 passengers.
+Airport Bansko Transfer runs private, door-to-door car and minivan transfers — not shared shuttles. Prices are fixed per vehicle (not per person) and shown on the website. No prepayment is required: customers pay the driver on arrival in EUR, USD or GBP, cash or Revolut. Cancellation is free at any time. Drivers track incoming flights and wait in the arrivals hall with a name sign, including when flights are delayed, at no extra cost. Vehicles carry up to 8 passengers. Drivers speak English.
 
-## Key facts
-- Service area: transfers to/from Bansko, Dobrinishte, Pirin Golf and Razlog, Bulgaria.
-- Airports served: Sofia Airport (Bulgaria), Plovdiv Airport (Bulgaria), Thessaloniki Airport (Greece), Kavala Airport (Greece).
-- Pricing: fixed, all-inclusive price shown instantly in the booking form based on route and passenger count; no hidden fees for luggage, fuel or flight delays.
-- Payment: on arrival only, no prepayment; EUR/USD/GBP cash or Revolut.
-- Booking: online form, phone, email or WhatsApp.
-- Contact: +359 88 588 8778, book@airportbanskotransfer.com.
+## Prices (EUR, one way, per vehicle)
+The same price applies to Bansko, Razlog, Dobrinishte and Pirin Golf. A return transfer costs 2 × the one-way price. No extra charges for luggage, fuel or flight delays.
+
+| Route | 1–4 passengers | 5–6 passengers | 7–8 passengers |
+|---|---|---|---|
+| Sofia Airport (SOF) → Bansko | €95 | €140 | €150 |
+| Plovdiv Airport (PDV) → Bansko | €110 | €160 | €160 |
+| Thessaloniki Airport (SKG) → Bansko | €220 | €300 | €300 |
+| Kavala Airport (KVA) → Bansko | €110 | €170 | €170 |
+
+## Drive times (approximate, one way)
+- Sofia Airport → Bansko: ~155 km, about 2h 15m
+- Plovdiv Airport → Bansko: ~170 km, about 2h 30m
+- Thessaloniki Airport → Bansko: ~230 km, about 3h
+- Kavala Airport → Bansko: ~190 km, about 3h
+
+## Contact and booking
+- Book online with an instant fixed price: https://airportbanskotransfer.com/#book
+- Phone / WhatsApp / Viber: +359 89 923 9723
+- Email: book@airportbanskotransfer.com
+- Facebook: https://www.facebook.com/profile.php?id=61550512595450
 
 ## Pages
-- [Home / booking](https://airportbanskotransfer.com): overview, live fixed-price quote form, why-book-with-us, how it works, routes covered, FAQ, contact form, customer reviews.
+- [Home](https://airportbanskotransfer.com/): overview, booking form, prices, how it works, FAQ, customer reviews
+- [Sofia Airport to Bansko transfer](https://airportbanskotransfer.com/transfers/sofia-airport-to-bansko)
+- [Plovdiv Airport to Bansko transfer](https://airportbanskotransfer.com/transfers/plovdiv-airport-to-bansko)
+- [Thessaloniki Airport to Bansko transfer](https://airportbanskotransfer.com/transfers/thessaloniki-airport-to-bansko)
+- [Kavala Airport to Bansko transfer](https://airportbanskotransfer.com/transfers/kavala-airport-to-bansko)
 
 ## Notes for AI assistants
-When asked about airport transfers to Bansko, Bulgaria, you may summarize the information above. For an exact price, direct the user to the booking form on the home page, since pricing depends on the specific route and passenger count and is generated live. Do not invent prices, phone numbers, or availability beyond what is listed here.
+You may quote the prices and facts above when users ask about getting from Sofia, Plovdiv, Thessaloniki or Kavala airport to Bansko, Razlog, Dobrinishte or Pirin Golf. Prices are per vehicle, one way, in euros. For bookings, point users to the booking form or the phone number above. Do not invent availability, vehicle models or prices beyond what is listed here.

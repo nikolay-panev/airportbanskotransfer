@@ -6,12 +6,36 @@ export default defineNuxtConfig({
           htmlAttrs: {
               lang: "en"
           },
+          titleTemplate: '%s',
           link: [
-              { rel: 'icon',  type: "image/ico", href: '/favicon.ico' },
+              { rel: 'icon',  type: "image/x-icon", href: '/favicon.ico' },
+              { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+              { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
+          ],
+          meta: [
+              { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+              { name: 'theme-color', content: '#0e2338' },
+              { name: 'format-detection', content: 'telephone=yes' },
+              { property: 'og:site_name', content: 'Airport Bansko Transfer' },
+              { property: 'og:locale', content: 'en_GB' },
           ],
       }
   },
   telemetry: { enabled: false },
+  // Pre-render every public page to static HTML so search engines and AI
+  // crawlers (most of which do not run JavaScript) see the full content.
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: [
+        '/',
+        '/transfers/sofia-airport-to-bansko',
+        '/transfers/plovdiv-airport-to-bansko',
+        '/transfers/thessaloniki-airport-to-bansko',
+        '/transfers/kavala-airport-to-bansko',
+      ],
+    },
+  },
   future: {
     compatibilityVersion: 4,
   },

@@ -132,6 +132,10 @@
 </template>
 
 <script setup>
+const props = defineProps({
+    // Pre-select a pickup airport, e.g. on a route landing page
+    pickup: { type: String, default: '' },
+})
 const api = useApi()
 const book1 = ref(null)
 const book2 = ref(null)
@@ -185,7 +189,7 @@ const allSources = ref([
     {type: 'subheader', title: 'Resorts', airport: false},
     {title: 'Bansko', value: 'Bansko', airport: false},
     {title: 'Dobrinishte', value: 'Dobrinishte', airport: false},
-    {title: 'Piring Golf', value: 'Pirin Golf', airport: false},
+    {title: 'Pirin Golf', value: 'Pirin Golf', airport: false},
     {title: 'Razlog', value: 'Razlog', airport: false}
 ])
 const allDestinations = ref([
@@ -197,20 +201,10 @@ const allDestinations = ref([
     {type: 'subheader', title: 'Resorts', airport: false},
     {title: 'Bansko', value: 'Bansko', airport: false},
     {title: 'Dobrinishte', value: 'Dobrinishte', airport: false},
-    {title: 'Piring Golf', value: 'Pirin Golf', airport: false},
+    {title: 'Pirin Golf', value: 'Pirin Golf', airport: false},
     {title: 'Razlog', value: 'Razlog', airport: false}
 ])
-const priceMap = ref([
-    {source: 'Sofia Airport, Bulgaria', passangers: 8, cost: 150},
-    {source: 'Sofia Airport, Bulgaria', passangers: 6, cost: 140},
-    {source: 'Sofia Airport, Bulgaria', passangers: 4, cost: 95},
-    {source: 'Plovdiv Airport, Bulgaria', passangers: 8 , cost: 160},
-    {source: 'Plovdiv Airport, Bulgaria', passangers: 4 , cost: 110},
-    {source: 'Thessaloniki Airport, Greece', passangers: 8, cost: 300},
-    {source: 'Thessaloniki Airport, Greece', passangers: 4, cost: 220},
-    {source: 'Kavala Airport, Greece', passangers: 8, cost: 170},
-    {source: 'Kavala Airport, Greece', passangers: 4, cost: 110},
-])
+// Prices live in app/utils/site.js (shared with the page copy and structured data)
 
 const updateDestinations = () => {
     if(booking.value.pickup_location != null) {
@@ -234,13 +228,9 @@ const updateSources = () => {
 
 const updatePrice = () => {
     if(formValid.value) {
-        booking.value.cost = 0
-
-        priceMap.value.forEach(item => {
-            if((booking.value.dropoff_location == item.source || booking.value.pickup_location == item.source) && booking.value.passangers <= item.passangers) {
-                booking.value.cost = item.cost
-            }
-        })
+        const airport = [booking.value.pickup_location, booking.value.dropoff_location]
+            .find(loc => ROUTES.some(r => r.airport === loc))
+        booking.value.cost = quotePrice(airport, booking.value.passangers)
 
         if(booking.value.oneway == false) booking.value.cost *= 2
         showConfirm.value = true
@@ -282,6 +272,10 @@ watch(() => booking.value.return_date, (n) => {
 onMounted(() => {
     sources.value = allSources.value
     destinations.value = allDestinations.value
+    if(props.pickup) {
+        booking.value.pickup_location = props.pickup
+        updateDestinations()
+    }
 })
 </script>
 <style scoped>

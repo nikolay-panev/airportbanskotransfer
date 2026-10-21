@@ -6,7 +6,7 @@
 
             <div class="d-flex align-center justify-center mb-10" v-if="averageRating">
                 <v-rating :model-value="averageRating" readonly half-increments density="compact" size="small" color="var(--color-amber)" empty-icon="mdi-star-outline" full-icon="mdi-star"></v-rating>
-                <span class="ml-2 rating-summary">{{ averageRating.toFixed(1) }} average from {{ ratings.length }} reviews</span>
+                <span class="ml-2 rating-summary">{{ averageRating.toFixed(1) }} out of 5 from {{ reviewCount }} customer reviews</span>
             </div>
 
             <v-row>
@@ -19,7 +19,7 @@
                                 </v-avatar>
                                 <div>
                                     <strong>{{rating.name}}</strong>
-                                    <div class="rating-date">{{rating.created}}</div>
+                                    <div class="rating-date"><time :datetime="isoDate(rating.created)">{{ prettyDate(rating.created) }}</time></div>
                                 </div>
                             </div>
                             <v-rating readonly size="small" :model-value="parseInt(rating.rating)" :length="5" empty-icon="mdi-star-outline" full-icon="mdi-star" color="var(--color-amber)"></v-rating>
@@ -32,7 +32,7 @@
 
         <v-card flat class="rate-us mx-auto mt-12" max-width="560" rounded="lg">
             <h2 class="text-h4 text-center font-weight-bold mb-2">Rate Our Service</h2>
-            <h3 class="text-center rate-us__sub font-weight-regular">We read every review — tell us how your transfer went.</h3>
+            <p class="text-center rate-us__sub">We read every review — tell us how your transfer went.</p>
             <v-form ref="rate" v-model="formValid" class="mt-6">
                 <v-row>
                     <v-col cols="12" class="text-center">
@@ -67,7 +67,6 @@ const rating = ref({
     comment: null,
     rating: 5,
 })
-const ratings = ref([])
 const alert = ref({
     show: false,
     text: null,
@@ -91,47 +90,53 @@ const sendRating = async () => {
     }
 }
 
-const getRatings = async () => {
-    const response = await api.post("", {
-        operation: "select",
-        table: "comments",
-        fields: ['name', 'comment', 'rating', 'created'],
-        where: [{deleted:{'is':null}}, {approved:{'eq':'1'}}],
-        page: 1,
-        limit: 12,
-        order: {'RAND()':''}
-    })
+// useAsyncData: fetched once during server render / prerender and reused on
+// the client (no hydration mismatch, reviews present in the HTML for crawlers),
+// then refreshed in the browser so newly approved reviews appear without a rebuild.
+const { data: reviews, refresh } = await useAsyncData('reviews', () => api.get('reviews.php').catch(() => null))
+onMounted(() => refresh())
 
-    ratings.value = response?.data || []
-}
-
-await getRatings()
-
-// Real (not fabricated) average, computed from whatever reviews were actually returned.
+const ratings = computed(() => reviews.value?.data || [])
+const reviewCount = computed(() => reviews.value?.total || ratings.value.length)
 const averageRating = computed(() => {
+    if(reviews.value?.average) return parseFloat(reviews.value.average)
     if(!ratings.value.length) return null
-    const sum = ratings.value.reduce((acc, r) => acc + (parseInt(r.rating) || 0), 0)
-    return sum / ratings.value.length
+    return ratings.value.reduce((acc, r) => acc + (parseInt(r.rating) || 0), 0) / ratings.value.length
 })
 
-// Feed real review data into structured data so search engines and AI answer
-// engines can surface an accurate aggregate rating — never invented numbers.
-if(averageRating.value) {
-    useHead({
-        script: [
-            {
-                type: 'application/ld+json',
-                innerHTML: JSON.stringify({
-                    '@context': 'https://schema.org',
-                    '@type': 'AggregateRating',
-                    itemReviewed: { '@type': 'LocalBusiness', name: 'Airport Bansko Transfer' },
-                    ratingValue: averageRating.value.toFixed(1),
-                    reviewCount: ratings.value.length,
-                })
-            }
-        ]
-    })
+const isoDate = (d) => (d || '').slice(0, 10)
+const prettyDate = (d) => {
+    if(!d) return ''
+    const date = new Date(d.replace(' ', 'T') + 'Z')
+    return isNaN(date) ? d : date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' })
 }
+
+// Real reviews -> structured data on the same LocalBusiness entity (@id) as the
+// rest of the site, so search engines and AI answer engines can cite them.
+// Only real, approved reviews are used — never invented numbers.
+useHead(computed(() => averageRating.value ? {
+    script: [
+        ldJson([{
+            '@type': 'LocalBusiness',
+            '@id': BUSINESS_ID,
+            name: SITE.name,
+            aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: averageRating.value.toFixed(1),
+                reviewCount: reviewCount.value,
+                bestRating: 5,
+                worstRating: 1,
+            },
+            review: ratings.value.filter(r => r.rating).map(r => ({
+                '@type': 'Review',
+                author: { '@type': 'Person', name: (r.name || '').trim() },
+                datePublished: isoDate(r.created),
+                reviewBody: (r.comment || '').trim(),
+                reviewRating: { '@type': 'Rating', ratingValue: parseInt(r.rating), bestRating: 5, worstRating: 1 },
+            })),
+        }]),
+    ],
+} : {}))
 </script>
 <style scoped>
 .rating-summary {

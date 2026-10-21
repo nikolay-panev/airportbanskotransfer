@@ -16,7 +16,7 @@
                     </p>
                     <div class="hero__actions">
                         <v-btn size="x-large" rounded="pill" color="var(--color-amber)" class="px-8 font-weight-bold" elevation="0" href="#book">Get Your Free Quote</v-btn>
-                        <v-btn size="x-large" rounded="pill" variant="outlined" color="white" class="px-8 ml-3" href="tel:+359899239723">Call Us</v-btn>
+                        <v-btn size="x-large" rounded="pill" variant="outlined" color="white" class="px-8 ml-3" :href="`tel:${SITE.phone}`">Call Us</v-btn>
                     </div>
                 </div>
                 <RouteLine class="hero__route" />
@@ -47,7 +47,7 @@
             </div>
         </section>
 
-        <main>
+        <div>
             <!-- ============ WELCOME ============ -->
             <section class="section container-narrow px-4">
                 <h2 class="text-h4 text-center font-weight-bold mb-4">Your private transfer to the Pirin mountains</h2>
@@ -115,36 +115,81 @@
                 <p class="eyebrow text-center">Routes We Cover</p>
                 <h2 id="routes-heading" class="text-h3 text-center font-weight-bold mb-4">Airport transfers to Bansko, from every direction</h2>
                 <p class="section__lead mb-10">
-                    Approximate one-way drive times — your exact fixed price is shown instantly in the booking form above.
+                    Approximate one-way distance and drive time. Every route serves Bansko, Razlog, Dobrinishte and Pirin Golf at the same price.
                 </p>
 
                 <v-row>
-                    <v-col cols="12" sm="6" lg="3" v-for="route in routes" :key="route.from">
-                        <v-card class="route-card" rounded="lg" elevation="0" href="#book">
+                    <v-col cols="12" sm="6" lg="3" v-for="route in ROUTES" :key="route.slug">
+                        <NuxtLink class="route-card" :to="`/transfers/${route.slug}`">
                             <v-icon color="var(--color-amber-dark)" size="28">mdi-airplane</v-icon>
-                            <h3 class="route-card__title">{{ route.from }}</h3>
+                            <h3 class="route-card__title">{{ route.airport }}</h3>
                             <v-icon size="18" color="var(--color-ink-soft)" class="my-1">mdi-arrow-down</v-icon>
-                            <p class="route-card__to"><v-icon size="16" color="var(--color-glacier)">mdi-map-marker</v-icon> {{ route.to }}</p>
+                            <p class="route-card__to"><v-icon size="16" color="var(--color-glacier)">mdi-map-marker</v-icon> Bansko</p>
                             <p class="route-card__meta">{{ route.distance }} · approx. {{ route.time }}</p>
-                        </v-card>
+                            <p class="route-card__price">from <strong>€{{ fromPrice(route) }}</strong> one way</p>
+                            <span class="route-card__more">Route details &rarr;</span>
+                        </NuxtLink>
                     </v-col>
                 </v-row>
             </section>
 
             <RidgeDivider tone="dim" />
 
+            <!-- ============ PRICES ============ -->
+            <section id="prices" class="section section--dim" aria-labelledby="prices-heading">
+                <div class="container-narrow px-4" style="max-width:900px">
+                    <p class="eyebrow text-center">Fixed, All-Inclusive</p>
+                    <h2 id="prices-heading" class="text-h3 text-center font-weight-bold mb-4">Bansko Transfer Prices</h2>
+                    <p class="section__lead mb-8">
+                        Price per vehicle, not per person, for a one-way private transfer. A return transfer costs twice the one-way price.
+                        No extra charges for luggage, fuel or flight delays — and nothing to pay until you meet your driver.
+                    </p>
+                    <div class="price-table-wrap">
+                        <table class="price-table">
+                            <caption class="sr-only">One-way private transfer prices in EUR from each airport to Bansko, Razlog, Dobrinishte and Pirin Golf</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Route</th>
+                                    <th scope="col">Passengers</th>
+                                    <th scope="col">One way</th>
+                                    <th scope="col">Return</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template v-for="route in ROUTES" :key="route.slug">
+                                    <tr v-for="(p, i) in route.prices" :key="route.slug + i" :class="{ 'price-table__first': i === 0 }">
+                                        <th v-if="i === 0" scope="rowgroup" :rowspan="route.prices.length">
+                                            <NuxtLink :to="`/transfers/${route.slug}`">{{ route.airportShort }} → Bansko</NuxtLink>
+                                        </th>
+                                        <td>{{ tierLabel(route.prices, i) }}</td>
+                                        <td><strong>€{{ p.cost }}</strong></td>
+                                        <td>€{{ p.cost * 2 }}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-center mt-6 price-note">Prices in euros (EUR). Pay the driver in EUR, USD or GBP, cash or Revolut.</p>
+                </div>
+            </section>
+
+            <RidgeDivider tone="light" />
+
             <!-- ============ FAQ ============ -->
-            <section id="faq" class="section section--dim" aria-labelledby="faq-heading">
+            <section id="faq" class="section" aria-labelledby="faq-heading">
                 <div class="container-narrow px-4" style="max-width:820px">
                     <p class="eyebrow text-center">Good To Know</p>
                     <h2 id="faq-heading" class="text-h3 text-center font-weight-bold mb-10">Frequently Asked Questions</h2>
 
                     <v-expansion-panels variant="accordion" class="faq-panels">
-                        <v-expansion-panel v-for="item in faq" :key="item.q" :title="item.q" :text="item.a"></v-expansion-panel>
+                        <!-- eager: answers are rendered into the HTML even while collapsed, so crawlers can read them -->
+                        <v-expansion-panel v-for="item in faq" :key="item.q" :title="item.q" eager>
+                            <v-expansion-panel-text>{{ item.a }}</v-expansion-panel-text>
+                        </v-expansion-panel>
                     </v-expansion-panels>
                 </div>
             </section>
-        </main>
+        </div>
 
         <ContactForm />
 
@@ -152,40 +197,7 @@
             <CustomerRatings class="mt-16" />
         </v-container>
 
-        <!-- ============ FOOTER ============ -->
-        <v-footer class="site-footer">
-            <div class="container-narrow px-4 py-10">
-                <v-row>
-                    <v-col cols="12" md="4">
-                        <v-img src="/images/logo.webp" alt="Airport Bansko Transfer logo" width="170" class="mb-4"></v-img>
-                        <p class="site-footer__text">Private, fixed-price airport transfers between Sofia, Plovdiv, Thessaloniki and Kavala airports and the Bansko area.</p>
-                    </v-col>
-                    <v-col cols="6" md="4">
-                        <h3 class="site-footer__heading">Quick Links</h3>
-                        <ul class="site-footer__list">
-                            <li><a href="#why-us">Why Us</a></li>
-                            <li><a href="#how-it-works">How It Works</a></li>
-                            <li><a href="#routes">Routes</a></li>
-                            <li><a href="#faq">FAQ</a></li>
-                            <li><a href="#reviews">Reviews</a></li>
-                        </ul>
-                    </v-col>
-                    <v-col cols="6" md="4">
-                        <h3 class="site-footer__heading">Contact</h3>
-                        <ul class="site-footer__list">
-                            <li><a href="tel:+359899239723">+359 89 923 9723</a></li>
-                            <li><a href="mailto:book@airportbanskotransfer.com">book@airportbanskotransfer.com</a></li>
-                            <li>Bansko, Bulgaria</li>
-                        </ul>
-                    </v-col>
-                </v-row>
-                <v-divider class="my-8" color="rgba(255,255,255,0.15)"></v-divider>
-                <p class="site-footer__copy">
-                    All rights reserved. Copyright© {{ new Date().getFullYear() }}
-                    <a href="https://airportbanskotransfer.com" aria-label="airportbanskotransfer.com">airportbanskotransfer.com</a>
-                </p>
-            </div>
-        </v-footer>
+        <SiteFooter />
     </v-container>
 </template>
 
@@ -205,79 +217,60 @@ const howItWorks = [
     { num: '02', title: 'Meet Your Driver', text: 'Your driver waits at the pick-up point at the scheduled time and helps with your luggage.' },
     { num: '03', title: 'Relax', text: 'Sit back and relax — your driver takes you straight to your destination, no stops or detours.' },
 ]
-const routes = [
-    { from: 'Sofia Airport, Bulgaria', to: 'Bansko', distance: '~155 km', time: '2h 15m' },
-    { from: 'Plovdiv Airport, Bulgaria', to: 'Bansko', distance: '~170 km', time: '2h 30m' },
-    { from: 'Thessaloniki Airport, Greece', to: 'Bansko', distance: '~230 km', time: '3h' },
-    { from: 'Kavala Airport, Greece', to: 'Bansko', distance: '~280 km', time: '3h 45m' },
-]
+const sofia = getRoute('sofia-airport-to-bansko')
 const faq = [
-    { q: 'How much does a transfer cost?', a: 'Select your pickup and drop-off points and passenger count in the booking form above — your fixed, all-inclusive price is shown instantly, before you enter any personal details.' },
+    { q: 'How much does a transfer from Sofia Airport to Bansko cost?', a: `A private one-way transfer from Sofia Airport to Bansko costs ${routePriceSentence(sofia)}. The price is per vehicle, not per person, and a return transfer is twice the one-way price. The same price applies to Razlog, Dobrinishte and Pirin Golf.` },
+    { q: 'How much do transfers from Plovdiv, Thessaloniki and Kavala airports cost?', a: ROUTES.filter(r => r.slug !== sofia.slug).map(r => `${r.airportShort}: ${routePriceSentence(r)}`).join('. ') + '. All prices are one way, per vehicle, in EUR.' },
+    { q: 'How long is the drive from Sofia Airport to Bansko?', a: `About ${sofia.time} for roughly ${sofia.distance.replace('~', '')}, depending on traffic and weather. From Plovdiv Airport allow about 2h 30m, from Thessaloniki about 3 hours and from Kavala about 3h 45m.` },
     { q: 'Do I need to pay in advance?', a: 'No. There is no prepayment. You pay your driver directly on arrival, in EUR, USD or GBP, in cash or via Revolut.' },
-    { q: 'What happens if my flight is delayed?', a: "We track your flight, so your driver will be waiting at arrivals regardless of delays — there's no need to contact us to update your pickup time." },
+    { q: 'What happens if my flight is delayed?', a: "We track your flight, so your driver will be waiting at arrivals regardless of delays, at no extra cost — there's no need to contact us to update your pickup time." },
+    { q: 'Where will the driver meet me?', a: 'In the arrivals hall, holding a sign with your name. The driver helps with your luggage and takes you directly to your accommodation.' },
     { q: 'Can I cancel or change my booking?', a: 'Yes, you can cancel free of charge at any time. To change a booking, contact us by phone, email or WhatsApp with your reference number.' },
     { q: 'Do you provide child seats?', a: "Let us know what you need in the Notes field when booking, or contact us directly, and we'll confirm availability for your dates." },
-    { q: 'How many passengers and how much luggage can you take?', a: 'We take up to 8 passengers depending on the vehicle. Select your passenger count in the booking form so we can quote a vehicle with enough space for your luggage.' },
+    { q: 'How many passengers and how much luggage can you take?', a: 'We take up to 8 passengers depending on the vehicle. Select your passenger count in the booking form so we can quote a vehicle with enough space for your luggage, and mention skis, snowboards or golf bags in the Notes field.' },
+    { q: 'Is this a shared shuttle?', a: 'No. Every transfer is private — the vehicle is reserved only for you and your group, with no stops for other passengers.' },
 ]
 
+const title = 'Airport Transfers to Bansko from Sofia & Plovdiv — from €95'
+const description = `Private, fixed-price transfers to Bansko, Razlog, Dobrinishte and Pirin Golf. Sofia Airport to Bansko from €${fromPrice(sofia)} per car. No prepayment, free cancellation, flight tracking.`
+const canonical = `${SITE.url}/`
+
 useHead({
-    title: "Reliable Airport Transfers to Bansko, Bulgaria | Airport Bansko Transfer",
-    htmlAttrs: { lang: 'en' },
+    title,
     link: [
-        { rel: 'canonical', href: 'https://airportbanskotransfer.com' },
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
-    ],
-    meta: [
-        { name: "description", content: "Private, fixed-price airport transfers to Bansko from Sofia, Plovdiv, Thessaloniki and Kavala airports. No prepayment, free cancellation, English-speaking drivers." },
-        { name: "robots", content: "index, follow" },
-        { name: "theme-color", content: "#0e2338" },
-        { property: "og:type", content: "website" },
-        { property: "og:title", content: "Airport Transfers to Bansko, Bulgaria" },
-        { property: "og:description", content: "Book your fixed-price Bansko transfer. Reliable private service from Sofia, Plovdiv, Thessaloniki and Kavala airports." },
-        { property: "og:image", content: "https://airportbanskotransfer.com/images/logo.webp" },
-        { property: "og:url", content: "https://airportbanskotransfer.com" },
-        { property: "og:locale", content: "en_US" },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: "Airport Transfers to Bansko, Bulgaria" },
-        { name: "twitter:description", content: "Private, fixed-price airport transfers to Bansko from Sofia, Plovdiv, Thessaloniki and Kavala airports." },
-        { name: "twitter:image", content: "https://airportbanskotransfer.com/images/logo.webp" },
+        { rel: 'canonical', href: canonical },
+        { rel: 'preload', as: 'image', href: '/images/bansko-lift.webp', fetchpriority: 'high' },
     ],
     script: [
-        {
-            type: 'application/ld+json',
-            innerHTML: JSON.stringify({
-                '@context': 'https://schema.org',
-                '@type': 'TaxiService',
-                name: 'Airport Bansko Transfer',
-                url: 'https://airportbanskotransfer.com',
-                image: 'https://airportbanskotransfer.com/images/logo.webp',
-                telephone: '+359899239723',
-                email: 'book@airportbanskotransfer.com',
-                priceRange: '€€',
-                areaServed: [
-                    { '@type': 'City', name: 'Bansko' },
-                    { '@type': 'City', name: 'Dobrinishte' },
-                    { '@type': 'City', name: 'Razlog' },
-                ],
-                sameAs: [
-                    'https://www.facebook.com/profile.php?id=61550512595450',
-                ],
-            })
-        },
-        {
-            type: 'application/ld+json',
-            innerHTML: JSON.stringify({
-                '@context': 'https://schema.org',
-                '@type': 'FAQPage',
-                mainEntity: faq.map(item => ({
-                    '@type': 'Question',
-                    name: item.q,
-                    acceptedAnswer: { '@type': 'Answer', text: item.a },
-                })),
-            })
-        }
-    ]
+        ldJson([
+            {
+                '@type': 'WebSite',
+                '@id': `${SITE.url}/#website`,
+                url: canonical,
+                name: SITE.name,
+                inLanguage: 'en',
+                publisher: { '@id': BUSINESS_ID },
+            },
+            businessSchema(),
+            { '@id': `${canonical}#faq`, ...faqSchema(faq) },
+        ]),
+    ],
+})
+useSeoMeta({
+    description,
+    robots: 'index, follow, max-image-preview:large',
+    ogType: 'website',
+    ogTitle: 'Private Airport Transfers to Bansko, Bulgaria — from €95',
+    ogDescription: description,
+    ogUrl: canonical,
+    ogImage: SITE.ogImage,
+    ogImageWidth: 1200,
+    ogImageHeight: 630,
+    ogImageAlt: 'Private airport transfers to Bansko',
+    twitterCard: 'summary_large_image',
+    twitterTitle: 'Private Airport Transfers to Bansko, Bulgaria',
+    twitterDescription: description,
+    twitterImage: SITE.ogImage,
 })
 </script>
 
@@ -431,6 +424,10 @@ useHead({
 
 /* ---------------- Routes ---------------- */
 .route-card {
+    display: block;
+    background: #fff;
+    border-radius: var(--radius-md);
+    color: inherit;
     height: 100%;
     padding: 26px 18px;
     text-align: center;
@@ -459,51 +456,60 @@ useHead({
     margin-top: 6px;
 }
 
+.route-card__price {
+    margin: 10px 0 2px;
+    color: var(--color-ink);
+}
+.route-card__price strong {
+    color: var(--color-amber-dark);
+    font-size: 1.15rem;
+}
+.route-card__more {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-glacier);
+}
+
+/* ---------------- Prices ---------------- */
+.price-table-wrap {
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+}
+.price-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+.price-table th, .price-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-line);
+}
+.price-table thead th {
+    background: var(--color-alpine-night);
+    color: #fff;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.price-table tbody th a {
+    color: var(--color-alpine-night);
+    font-weight: 700;
+    text-decoration: none;
+}
+.price-table tbody th a:hover { color: var(--color-glacier); }
+.price-table tbody th { vertical-align: top; }
+.price-note {
+    color: var(--color-ink-soft);
+    font-size: 0.9rem;
+}
+
 /* ---------------- FAQ ---------------- */
 .faq-panels {
     border-radius: var(--radius-md);
     overflow: hidden;
 }
 
-/* ---------------- Footer ---------------- */
-.site-footer {
-    background: var(--color-alpine-night);
-    display: block;
-}
-.site-footer__text {
-    color: rgba(255,255,255,0.7);
-    font-size: 0.9rem;
-    line-height: 1.6;
-}
-.site-footer__heading {
-    color: #fff;
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 14px;
-}
-.site-footer__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.site-footer__list li {
-    margin-bottom: 10px;
-}
-.site-footer__list a {
-    color: rgba(255,255,255,0.75);
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-.site-footer__list a:hover {
-    color: var(--color-amber);
-}
-.site-footer__copy {
-    color: rgba(255,255,255,0.55);
-    font-size: 0.8rem;
-    text-align: center;
-}
-.site-footer__copy a {
-    color: rgba(255,255,255,0.8);
-}
 </style>

@@ -19,7 +19,7 @@ const channels = [
     { label: 'Call', icon: 'mdi-cellphone', href: 'tel:+359899239723' },
     { label: 'WhatsApp', icon: 'mdi-whatsapp', href: 'https://wa.me/359899239723?text=', target: '_blank', rel: 'noopener' },
     { label: 'Messenger', icon: 'mdi-facebook-messenger', href: 'https://m.me/bore.terziev1', target: '_blank', rel: 'noopener' },
-    { label: 'Viber', icon: 'mdi-whatsapp', href: 'viber://contact?number=%2B359899239723' },
+    { label: 'Viber', icon: 'mdi-phone-message-outline', href: 'viber://contact?number=%2B359899239723' },
     { label: 'Facebook', icon: 'mdi-facebook', href: 'https://www.facebook.com/profile.php?id=61550512595450', target: '_blank', rel: 'noopener' },
 ]
 </script>
@@ -64,6 +64,7 @@ const channels = [
     height: 56px;
     border-radius: 50%;
     background: #25D366;
+    text-decoration: none;
     display: flex;
     align-items: center;
     justify-content: center;
